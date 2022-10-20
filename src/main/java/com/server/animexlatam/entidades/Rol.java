@@ -5,6 +5,7 @@
  */
 package com.server.animexlatam.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +47,7 @@ public class Rol implements Serializable{
     private Date updateAt;
     
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "roles")
     @JoinColumn(name = "id_est")
     private Estado estado;
     

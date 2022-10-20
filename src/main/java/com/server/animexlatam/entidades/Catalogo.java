@@ -5,6 +5,7 @@
  */
 package com.server.animexlatam.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -54,10 +55,12 @@ public class Catalogo implements Serializable{
     private List<Genero> generos;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "catalogos")
     @JoinColumn(name = "id_est")
     private Estado estado;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "catalogos")
     @JoinColumn(name = "id_cate")
     private Categoria categoria;
 

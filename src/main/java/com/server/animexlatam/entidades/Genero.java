@@ -5,6 +5,7 @@
  */
 package com.server.animexlatam.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,7 @@ public class Genero implements Serializable {
     private Date updateAt;
     
     @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties(value = "generos")
     @JoinColumn(name = "id_cat")
     private Catalogo catalogo;
     

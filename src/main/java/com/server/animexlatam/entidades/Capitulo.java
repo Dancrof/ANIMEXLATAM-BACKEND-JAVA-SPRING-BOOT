@@ -5,6 +5,7 @@
  */
 package com.server.animexlatam.entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,7 +47,8 @@ public class Capitulo implements Serializable {
     private Date updateAt;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_cat")
+    @JsonIgnoreProperties(value = "capitulos")
+    @JoinColumn(name = "id_cat")   
     private Catalogo catalogo;
 
     public long getId() {
