@@ -7,6 +7,7 @@ package com.server.animexlatam.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,13 +42,12 @@ public class Usuario implements Serializable {
     private String password;
     
     @Column(name = "create_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "update_at", nullable = true)
-    private Date updateAt;
+    private LocalDateTime updateAt;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = "usuarios")
     @JoinColumn(name = "id_rol")
     private Rol rol;
@@ -75,15 +76,15 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -98,5 +99,10 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "Usuario{" + "id=" + id + ", username=" + username + ", password=" + password + ", createAt=" + createAt + ", updateAt=" + updateAt + ", rol=" + rol + '}';
-    }   
+    }
+    
+    @PrePersist
+    void registroDeCreacion(){
+       this.createAt = LocalDateTime.now();
+    }
 }

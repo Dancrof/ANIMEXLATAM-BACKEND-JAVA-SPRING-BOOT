@@ -7,6 +7,7 @@ package com.server.animexlatam.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -18,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,27 +46,26 @@ public class Catalogo implements Serializable{
     @Column(name = "sinopsis_cat", nullable = false)
     private String sinopsis;
 
-    @Column(name = "create_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    @Column(name = "create_at", nullable = false)    
+    private LocalDateTime createAt;
 
     @Column(name = "update_at", nullable = true)
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
-    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.MERGE)
     private List<Genero> generos;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = "catalogos")
     @JoinColumn(name = "id_est")
     private Estado estado;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = "catalogos")
     @JoinColumn(name = "id_cate")
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.MERGE)
     private List<Capitulo> capitulos;
 
     public long getId() {
@@ -99,15 +100,15 @@ public class Catalogo implements Serializable{
         this.sinopsis = sinopsis;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -146,5 +147,10 @@ public class Catalogo implements Serializable{
     @Override
     public String toString() {
         return "Catalogo{" + "id=" + id + ", nombre=" + nombre + ", portadaUrl=" + portadaUrl + ", sinopsis=" + sinopsis + ", createAt=" + createAt + ", updateAt=" + updateAt + ", generos=" + generos + ", estado=" + estado + ", categoria=" + categoria + ", capitulos=" + capitulos + '}';
+    }
+    
+    @PrePersist
+    void registroDeCreacion(){
+       this.createAt = LocalDateTime.now();
     }
 }

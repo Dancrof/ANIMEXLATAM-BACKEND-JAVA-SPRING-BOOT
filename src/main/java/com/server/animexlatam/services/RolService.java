@@ -6,6 +6,8 @@
 package com.server.animexlatam.services;
 
 import com.server.animexlatam.entidades.Rol;
+import com.server.animexlatam.exepciones.ResourceNotFoundExeption;
+import com.server.animexlatam.exepciones.ResourceRedundatExeption;
 import com.server.animexlatam.repositories.IRolRepository;
 import java.util.List;
 import java.util.Optional;
@@ -19,14 +21,18 @@ import org.springframework.stereotype.Service;
  * @author Bryan
  */
 @Service
-public class RolService implements IGenericService<Rol>{
+public class RolService implements IGenericService<Rol> {
 
     @Autowired
     private IRolRepository rolRepo;
-    
+
     @Override
     public Rol saveModel(Rol modelo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       Optional<Rol> search = this.rolRepo.findById(modelo.getId());
+       if (!search.isPresent()) {
+            return this.rolRepo.save(modelo);
+        }
+       throw new ResourceRedundatExeption("Esta Entidad ya Existe");
     }
 
     @Override
@@ -41,7 +47,11 @@ public class RolService implements IGenericService<Rol>{
 
     @Override
     public Optional<Rol> FindModel(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Optional<Rol> search = this.rolRepo.findById(id);
+        if (search.isPresent()) {
+            return search;
+        }
+        throw new ResourceNotFoundExeption("Esta Entidad no Existe");
     }
 
     @Override
@@ -54,6 +64,4 @@ public class RolService implements IGenericService<Rol>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
 }

@@ -7,6 +7,7 @@ package com.server.animexlatam.entidades;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +20,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,18 +42,17 @@ public class Rol implements Serializable{
     private String nombre;
     
     @Column(name = "create_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "update_at", nullable = true)
-    private Date updateAt;
+    private LocalDateTime updateAt;
     
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = "roles")
     @JoinColumn(name = "id_est")
     private Estado estado;
     
-    @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL)    
+    @OneToMany(mappedBy = "rol", cascade = CascadeType.MERGE)    
     private List<Usuario> usuarios;
 
     public long getId() {
@@ -70,19 +71,15 @@ public class Rol implements Serializable{
         this.nombre = nombre;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -105,5 +102,10 @@ public class Rol implements Serializable{
     @Override
     public String toString() {
         return "Rol{" + "id=" + id + ", nombre=" + nombre + ", createAt=" + createAt + ", updateAt=" + updateAt + ", estado=" + estado + ", usuarios=" + usuarios + '}';
+    }
+    
+    @PrePersist
+    void registroDeCreacion(){
+       this.createAt = LocalDateTime.now();
     }
 }

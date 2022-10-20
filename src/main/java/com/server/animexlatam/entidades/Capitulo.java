@@ -13,12 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
+import javax.persistence.PrePersist;
 
 /**
  *
@@ -39,14 +38,13 @@ public class Capitulo implements Serializable {
     @Column(name = "capitulo_url_cap", nullable = false)
     private String capituloUrl;
 
-    @Column(name = "create_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    @Column(name = "create_at", nullable = false)  
+    private LocalDateTime createAt;
 
     @Column(name = "update_at", nullable = true)
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JsonIgnoreProperties(value = "capitulos")
     @JoinColumn(name = "id_cat")   
     private Catalogo catalogo;
@@ -75,15 +73,15 @@ public class Capitulo implements Serializable {
         this.capituloUrl = capituloUrl;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -98,5 +96,10 @@ public class Capitulo implements Serializable {
     @Override
     public String toString() {
         return "Capitulo{" + "id=" + id + ", numeroCapitulo=" + numeroCapitulo + ", capituloUrl=" + capituloUrl + ", createAt=" + createAt + ", updateAt=" + updateAt + ", catalogo=" + catalogo + '}';
+    }
+    
+    @PrePersist
+    void registroDeCreacion(){
+       this.createAt = LocalDateTime.now();
     }
 }

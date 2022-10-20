@@ -6,7 +6,10 @@
 package com.server.animexlatam.services;
 
 import com.server.animexlatam.entidades.Estado;
+import com.server.animexlatam.exepciones.ResourceNotFoundExeption;
+import com.server.animexlatam.exepciones.ResourceRedundatExeption;
 import com.server.animexlatam.repositories.IEstadoRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,7 @@ public class EstadoService implements IGenericService<Estado> {
         if (!search.isPresent()) {
             return this.estadoRepo.save(modelo);
         }
-        return null;
+        throw new ResourceRedundatExeption("Entidad ya existente");
     }
 
     @Override
@@ -49,26 +52,28 @@ public class EstadoService implements IGenericService<Estado> {
         if (search.isPresent()) {
             return search;
         }
-        return null;
+        throw new ResourceNotFoundExeption("No se encontro la entidad a buscar");
     }
 
     @Override
     public boolean updateModel(Estado modelo) {
-        Optional<Estado> search = this.FindModel(modelo.getId());
+        Optional<Estado> search = this.estadoRepo.findById(modelo.getId());
         if (search.isPresent()) {
-            this.estadoRepo.save(modelo);
+            search.get().setNombre(modelo.getNombre());
+            search.get().setUpdateAt(LocalDateTime.now());
+            this.estadoRepo.save(search.get());
             return true;
         }
-        return false;
+        throw new ResourceNotFoundExeption("No se encontro la entidad a actualizar");
     }
 
     @Override
     public boolean deleteModel(long id) {
-        Optional<Estado> search = this.FindModel(id);
+        Optional<Estado> search = this.estadoRepo.findById(id);
         if (search.isPresent()) {
             this.estadoRepo.deleteById(id);
             return true;
         }
-        return false;
+        throw new ResourceNotFoundExeption("No se encontro la entidad a eliminar");
     }
 }

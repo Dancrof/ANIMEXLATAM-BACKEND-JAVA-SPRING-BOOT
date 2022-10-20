@@ -6,6 +6,7 @@
 package com.server.animexlatam.entidades;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,13 +38,12 @@ public class Categoria implements Serializable {
     private String nombre;
 
     @Column(name = "create_at", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "update_at", nullable = true)
-    private Date updateAt;
+    private LocalDateTime updateAt;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.MERGE)
     private List<Catalogo> catalogos;
 
     public long getId() {
@@ -61,15 +62,15 @@ public class Categoria implements Serializable {
         this.nombre = nombre;
     }
 
-    public Date getCreateAt() {
+    public LocalDateTime getCreateAt() {
         return createAt;
     }
 
-    public Date getUpdateAt() {
+    public LocalDateTime getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(Date updateAt) {
+    public void setUpdateAt(LocalDateTime updateAt) {
         this.updateAt = updateAt;
     }
 
@@ -86,4 +87,8 @@ public class Categoria implements Serializable {
         return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", createAt=" + createAt + ", updateAt=" + updateAt + ", catalogos=" + catalogos + '}';
     }
 
+    @PrePersist
+    void registroDeCreacion(){
+       this.createAt = LocalDateTime.now();
+    }
 }
