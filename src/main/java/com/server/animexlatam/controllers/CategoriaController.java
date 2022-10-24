@@ -5,8 +5,9 @@
  */
 package com.server.animexlatam.controllers;
 
+import com.server.animexlatam.entidades.Categoria;
 import com.server.animexlatam.entidades.Estado;
-import com.server.animexlatam.services.EstadoService;
+import com.server.animexlatam.services.CategoriaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,34 +25,34 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Bryan
  */
 @RestController
-@RequestMapping("/api/estado")
-public class EstadoController {
+@RequestMapping("/api/categoria")
+public class CategoriaController {
     
     @Autowired
-    private EstadoService estadoSvc;
+    private CategoriaService categoriaSvc;
     
     @GetMapping()
-    private ResponseEntity<List<Estado>> optenerEstados() {
-        return ResponseEntity.ok(this.estadoSvc.FindAllModels());
+    private ResponseEntity<List<Categoria>> optenerCategorias() {
+        return ResponseEntity.ok(this.categoriaSvc.FindAllModels());
     }
     
     @GetMapping("/{id}")
-    private Estado optenerUnEstado(@PathVariable long id) {
-        return this.estadoSvc.FindModel(id).get();
+    private Categoria optenerUnaCategoria(@PathVariable long id) {
+        return this.categoriaSvc.FindModel(id).get();
     }
     
     @PostMapping()
-    private Estado crearEstado(@RequestBody Estado modelo) {
-        return this.estadoSvc.saveModel(modelo);
+    private Categoria crearCategoria(@RequestBody Categoria modelo) {
+        return this.categoriaSvc.saveModel(modelo);
     }
     
     @PutMapping()
-    private boolean editarEstado(@RequestBody Estado modelo) {
-        return this.estadoSvc.updateModel(modelo);
+    private boolean editarCategoria(@RequestBody Categoria modelo) {
+        return this.categoriaSvc.updateModel(modelo);
     }
     
     @DeleteMapping("/{id}")
-    private boolean eliminarEstado(@PathVariable long id) {
-        return this.estadoSvc.deleteModel(id);
+    private boolean eliminarCategoria(@PathVariable long id) {
+        return this.categoriaSvc.deleteModel(id);
     }
 }

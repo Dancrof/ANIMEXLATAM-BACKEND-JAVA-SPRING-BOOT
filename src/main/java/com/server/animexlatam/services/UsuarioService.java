@@ -7,6 +7,7 @@ package com.server.animexlatam.services;
 
 import com.server.animexlatam.entidades.Rol;
 import com.server.animexlatam.entidades.Usuario;
+import com.server.animexlatam.exepciones.ResourceNotFoundExeption;
 import com.server.animexlatam.exepciones.ResourceRedundatExeption;
 import com.server.animexlatam.repositories.IRolRepository;
 import com.server.animexlatam.repositories.IUsuarioRepository;
@@ -56,7 +57,7 @@ public class UsuarioService implements IGenericService<Usuario> {
         if (search.isPresent()) {
             return search;
         }
-        throw new ResourceRedundatExeption("Registro no existente");
+        throw new ResourceNotFoundExeption("Registro no existente");
     }
 
     @Override
@@ -71,7 +72,7 @@ public class UsuarioService implements IGenericService<Usuario> {
             this.usuarioRepo.save(search.get());
             return true;
         }
-        throw new ResourceRedundatExeption("Registro no existente");
+        throw new ResourceNotFoundExeption("Registro no existente");
     }
 
     @Override
@@ -81,7 +82,7 @@ public class UsuarioService implements IGenericService<Usuario> {
             this.usuarioRepo.delete(search.get());
             return true;
         }
-        throw new ResourceRedundatExeption("Registro no existente");
+        throw new ResourceNotFoundExeption("Registro no existente");
     }
 
 }
