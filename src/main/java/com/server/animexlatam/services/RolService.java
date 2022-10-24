@@ -9,6 +9,7 @@ import com.server.animexlatam.entidades.Rol;
 import com.server.animexlatam.exepciones.ResourceNotFoundExeption;
 import com.server.animexlatam.exepciones.ResourceRedundatExeption;
 import com.server.animexlatam.repositories.IRolRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,11 @@ public class RolService implements IGenericService<Rol> {
 
     @Override
     public Rol saveModel(Rol modelo) {
-       Optional<Rol> search = this.rolRepo.findById(modelo.getId());
-       if (!search.isPresent()) {
+        Optional<Rol> search = this.rolRepo.findByNombre(modelo.getNombre());
+        if (!search.isPresent()) {
             return this.rolRepo.save(modelo);
         }
-       throw new ResourceRedundatExeption("Esta Entidad ya Existe");
+        throw new ResourceRedundatExeption("Esta Registro ya Existe");
     }
 
     @Override
@@ -42,7 +43,7 @@ public class RolService implements IGenericService<Rol> {
 
     @Override
     public Page<Rol> FindAllModelsByPages(Pageable pageable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.rolRepo.findAll(pageable);
     }
 
     @Override
@@ -51,17 +52,30 @@ public class RolService implements IGenericService<Rol> {
         if (search.isPresent()) {
             return search;
         }
-        throw new ResourceNotFoundExeption("Esta Entidad no Existe");
+        throw new ResourceNotFoundExeption("Este Registro no Existe");
     }
 
     @Override
     public boolean updateModel(Rol modelo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Optional<Rol> search = this.rolRepo.findById(modelo.getId());
+        if (search.isPresent()) {
+            search.get().setNombre(modelo.getNombre());
+            search.get().setEstado(modelo.getEstado());
+            search.get().setUsuarios(modelo.getUsuarios());
+            search.get().setUpdateAt(LocalDateTime.now());
+            this.rolRepo.save(search.get());
+            return true;
+        }
+        throw new ResourceNotFoundExeption("Este Registro no Existe");
     }
 
     @Override
     public boolean deleteModel(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Optional<Rol> search = this.rolRepo.findById(id);
+        if (search.isPresent()) {
+            this.rolRepo.delete(search.get());
+            return true;
+        }
+        throw new ResourceNotFoundExeption("Este Registro no Existe");
     }
-
 }

@@ -6,6 +6,7 @@
 package com.server.animexlatam.repositories;
 
 import com.server.animexlatam.entidades.Rol;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,5 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Bryan
  */
 public interface IRolRepository extends JpaRepository<Rol, Long>{
-    
+    Optional<Rol> findByNombre(String nombre);
 }

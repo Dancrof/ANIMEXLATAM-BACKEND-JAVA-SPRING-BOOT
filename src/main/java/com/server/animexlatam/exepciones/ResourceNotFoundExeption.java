@@ -5,10 +5,14 @@
  */
 package com.server.animexlatam.exepciones;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  *
  * @author Bryan
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundExeption extends RuntimeException{
 
     public ResourceNotFoundExeption(String message) {

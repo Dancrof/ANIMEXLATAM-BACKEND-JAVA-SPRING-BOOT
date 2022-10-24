@@ -6,6 +6,7 @@
 package com.server.animexlatam.repositories;
 
 import com.server.animexlatam.entidades.Estado;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -14,4 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface IEstadoRepository extends JpaRepository<Estado, Long>{
     
+    Optional<Estado> findByNombre(String nombre);
 }

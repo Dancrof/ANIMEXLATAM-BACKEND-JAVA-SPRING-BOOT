@@ -29,11 +29,11 @@ public class EstadoService implements IGenericService<Estado> {
 
     @Override
     public Estado saveModel(Estado modelo) {
-        Optional<Estado> search = this.estadoRepo.findById(modelo.getId());
+        Optional<Estado> search = this.estadoRepo.findByNombre(modelo.getNombre());
         if (!search.isPresent()) {
             return this.estadoRepo.save(modelo);
         }
-        throw new ResourceRedundatExeption("Entidad ya existente");
+        throw new ResourceRedundatExeption("Registro ya existente");
     }
 
     @Override
@@ -74,6 +74,6 @@ public class EstadoService implements IGenericService<Estado> {
             this.estadoRepo.deleteById(id);
             return true;
         }
-        throw new ResourceNotFoundExeption("No se encontro la entidad a eliminar");
+        throw new ResourceNotFoundExeption("No se encontro el registro a eliminar");
     }
 }
